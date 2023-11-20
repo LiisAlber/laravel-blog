@@ -59,7 +59,13 @@ class BlogController extends Controller
     // Remove the specified blog post from storage
     public function destroy(Blog $blog)
     {
-        $blog->delete();
-        return redirect()->route('blogs.index')->with('success', 'Blog post deleted successfully.');
+        if (auth()->user() && auth()->user()->is_admin) {
+            $blog->delete();
+            return redirect()->route('blogs.index')->with('success', 'Blog post deleted successfully.');
+        } else {
+            // Redirect or show an error message if the user is not an admin
+            return redirect()->route('blogs.index')->with('error', 'Unauthorized action.');
+        }
     }
+
 }

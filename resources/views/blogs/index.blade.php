@@ -55,10 +55,16 @@
 </body>
 </html>
 
-@foreach($blogs as $blog)
-    <!-- Hidden form for each post to handle deletion -->
-    <form id="delete-form-{{ $blog->id }}" action="{{ route('blogs.destroy', $blog->id) }}" method="POST" style="display: none;">
-        @csrf
-        @method('DELETE')
-    </form>
+@foreach ($blogs as $blog)
+    <div class="blog-post">
+        <!-- Display blog post title, content, etc. -->
+
+        @if (auth()->user() && auth()->user()->is_admin)
+            <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        @endif
+    </div>
 @endforeach
