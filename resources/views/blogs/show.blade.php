@@ -14,11 +14,7 @@
 
         <!-- Delete button visible only to admin users -->
         @if(auth()->user() && auth()->user()->is_admin)
-            <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST" style="display:inline;">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete</button>
-            </form>
+            
         @endif
     </div>
     

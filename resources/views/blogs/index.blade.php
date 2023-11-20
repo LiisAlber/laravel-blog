@@ -7,7 +7,7 @@
     
 </head>
 <body>
-    <div class="container mt-4">
+    <div class="container">
         <h1>Blog Posts</h1>
         <a href="{{ route('blogs.create') }}" class="btn btn-success mb-3">Create New Post</a>
 
@@ -31,9 +31,17 @@
                         <td>{{ $blog->title }}</td>
                         <td>{{ Str::limit($blog->description, 50) }}</td>
                         <td>
-                            <a href="{{ route('blogs.show', $blog) }}" class="btn btn-primary btn-sm">View</a>
-                            <a href="{{ route('blogs.edit', $blog) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{{ route('blogs.show', $blog->id) }}" class="btn btn-primary btn-sm">View</a>
+                            <a href="{{ route('blogs.edit', $blog->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            
+                            <!-- Delete button -->
                             <button onclick="deleteConfirm('{{ $blog->id }}')" class="btn btn-danger btn-sm">Delete</button>
+
+                            <!-- Hidden form for delete -->
+                            <form id="delete-form-{{ $blog->id }}" action="{{ route('blogs.destroy', $blog->id) }}" method="POST" style="display: none;">
+                                @csrf
+                                @method('DELETE')
+                            </form>
                         </td>
                     </tr>
                 @empty
@@ -45,26 +53,14 @@
         </table>
     </div>
 
+
     <script>
         function deleteConfirm(blogId) {
-            if(confirm('Are you sure you want to delete this post?')) {
-                document.getElementById('delete-form-' + blogId).submit();
-            }
+        if(confirm('Are you sure you want to delete this post?')) {
+            document.getElementById('delete-form-' + blogId).submit();
         }
+    }
+
     </script>
 </body>
 </html>
-
-@foreach ($blogs as $blog)
-    <div class="blog-post">
-        <!-- Display blog post title, content, etc. -->
-
-        @if (auth()->user() && auth()->user()->is_admin)
-            <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
-        @endif
-    </div>
-@endforeach
